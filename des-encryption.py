@@ -6,34 +6,35 @@
 #  Copyright   : Copyright 2014 Hamza Megahed
 #  Description : DES Encryption Algorithm
 #  ============================================================================
-#  
-# 
+#
+#
 #  ============================================================================
 #    This file is part of DES Calculator.
-# 
+#
 #     DES Calculator is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
 #     the Free Software Foundation, either version 3 of the License, or
 #     (at your option) any later version.
-# 
+#
 #     DES Calculator is distributed in the hope that it will be useful,
 #     but WITHOUT ANY WARRANTY; without even the implied warranty of
 #     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #     GNU General Public License for more details.
-# 
+#
 #     You should have received a copy of the GNU General Public License
 #     along with DES Calculator.  If not, see <http://www.gnu.org/licenses/>.
 #  ===========================================================================
 
 import itertools
+from utils import list_binary_to_hex
 from keygen import *
-# Convert plaintext input from a Hex to binary 
+# Convert plaintext input from a Hex to binary
 pt_hexinput = input("Enter The PlainText in Hex(16 digits):\n")
 try:
-    (int(pt_hexinput, 16)) 
+    (int(pt_hexinput, 16))
 except:
     print ("That is an invalid hex value")
-if len(pt_hexinput) == 16:    
+if len(pt_hexinput) == 16:
         pass
 else: raise ValueError('error')
 pt_bininput=bin(int(pt_hexinput, 16))[2:].zfill(64)
@@ -43,45 +44,45 @@ for digit in str(pt_bininput):
     pt.append(int(digit))
 
 # Initial permutation
-IP=        [pt[58], pt[50], pt[42], pt[34], pt[26], pt[18], pt[10], pt[2], 
-            pt[60], pt[52], pt[44], pt[36], pt[28], pt[20], pt[12], pt[4], 
-            pt[62], pt[54], pt[46], pt[38], pt[30], pt[22], pt[14], pt[6], 
-            pt[64], pt[56], pt[48], pt[40], pt[32], pt[24], pt[16], pt[8], 
-            pt[57], pt[49], pt[41], pt[33], pt[25], pt[17], pt[9],  pt[1], 
-            pt[59], pt[51], pt[43], pt[35], pt[27], pt[19], pt[11], pt[3], 
-            pt[61], pt[53], pt[45], pt[37], pt[29], pt[21], pt[13], pt[5], 
+IP=        [pt[58], pt[50], pt[42], pt[34], pt[26], pt[18], pt[10], pt[2],
+            pt[60], pt[52], pt[44], pt[36], pt[28], pt[20], pt[12], pt[4],
+            pt[62], pt[54], pt[46], pt[38], pt[30], pt[22], pt[14], pt[6],
+            pt[64], pt[56], pt[48], pt[40], pt[32], pt[24], pt[16], pt[8],
+            pt[57], pt[49], pt[41], pt[33], pt[25], pt[17], pt[9],  pt[1],
+            pt[59], pt[51], pt[43], pt[35], pt[27], pt[19], pt[11], pt[3],
+            pt[61], pt[53], pt[45], pt[37], pt[29], pt[21], pt[13], pt[5],
             pt[63], pt[55], pt[47], pt[39], pt[31], pt[23], pt[15], pt[7]]
 
 #Permutation Function
 def permu(perm):
-    p=    [perm[15], perm[6],  perm[19], perm[20], 
-           perm[28], perm[11], perm[27], perm[16], 
-           perm[0],  perm[14], perm[22], perm[25], 
-           perm[4],  perm[17], perm[30], perm[9], 
-           perm[1],  perm[7],  perm[23], perm[13], 
-           perm[31], perm[26], perm[2],  perm[8], 
-           perm[18], perm[12], perm[29], perm[5], 
+    p=    [perm[15], perm[6],  perm[19], perm[20],
+           perm[28], perm[11], perm[27], perm[16],
+           perm[0],  perm[14], perm[22], perm[25],
+           perm[4],  perm[17], perm[30], perm[9],
+           perm[1],  perm[7],  perm[23], perm[13],
+           perm[31], perm[26], perm[2],  perm[8],
+           perm[18], perm[12], perm[29], perm[5],
            perm[21], perm[10], perm[3],  perm[24]]
     return (p)
 #Left side
-L_IP =      [pt[58], pt[50], pt[42], pt[34], pt[26], pt[18], pt[10], pt[2], 
-             pt[60], pt[52], pt[44], pt[36], pt[28], pt[20], pt[12], pt[4], 
-             pt[62], pt[54], pt[46], pt[38], pt[30], pt[22], pt[14], pt[6], 
+L_IP =      [pt[58], pt[50], pt[42], pt[34], pt[26], pt[18], pt[10], pt[2],
+             pt[60], pt[52], pt[44], pt[36], pt[28], pt[20], pt[12], pt[4],
+             pt[62], pt[54], pt[46], pt[38], pt[30], pt[22], pt[14], pt[6],
              pt[64], pt[56], pt[48], pt[40], pt[32], pt[24], pt[16], pt[8]]
 #Right side
-R_IP =      [pt[57], pt[49], pt[41], pt[33], pt[25], pt[17], pt[9],  pt[1], 
-             pt[59], pt[51], pt[43], pt[35], pt[27], pt[19], pt[11], pt[3], 
-             pt[61], pt[53], pt[45], pt[37], pt[29], pt[21], pt[13], pt[5], 
+R_IP =      [pt[57], pt[49], pt[41], pt[33], pt[25], pt[17], pt[9],  pt[1],
+             pt[59], pt[51], pt[43], pt[35], pt[27], pt[19], pt[11], pt[3],
+             pt[61], pt[53], pt[45], pt[37], pt[29], pt[21], pt[13], pt[5],
              pt[63], pt[55], pt[47], pt[39], pt[31], pt[23], pt[15], pt[7]]
 #Expand right side from 32 bits to 48 bits
 def extend(ex):
-    EX =    [ex[31], ex[0],  ex[1],  ex[2],  ex[3],  ex[4], 
-             ex[3],  ex[4],  ex[5],  ex[6],  ex[7],  ex[8], 
-             ex[7],  ex[8],  ex[9],  ex[10], ex[11], ex[12], 
-             ex[11], ex[12], ex[13], ex[14], ex[15], ex[16], 
-             ex[15], ex[16], ex[17], ex[18], ex[19], ex[20], 
-             ex[19], ex[20], ex[21], ex[22], ex[23], ex[24], 
-             ex[23], ex[24], ex[25], ex[26], ex[27], ex[28], 
+    EX =    [ex[31], ex[0],  ex[1],  ex[2],  ex[3],  ex[4],
+             ex[3],  ex[4],  ex[5],  ex[6],  ex[7],  ex[8],
+             ex[7],  ex[8],  ex[9],  ex[10], ex[11], ex[12],
+             ex[11], ex[12], ex[13], ex[14], ex[15], ex[16],
+             ex[15], ex[16], ex[17], ex[18], ex[19], ex[20],
+             ex[19], ex[20], ex[21], ex[22], ex[23], ex[24],
+             ex[23], ex[24], ex[25], ex[26], ex[27], ex[28],
              ex[27], ex[28], ex[29], ex[30], ex[31], ex[0]]
     return (EX)
 #S-Boxes
@@ -125,6 +126,9 @@ EX_R=extend(R_IP)
 print("Initial Permutation =",format(IP))
 print("Left ",format(L_IP))
 print("Right ",format(R_IP))
+print("Left in hexa ",format(list_binary_to_hex(L_IP)))
+print("Right in hexa",format(list_binary_to_hex(R_IP)))
+
 r=1
 for x in shift:
     print("================================================================================")
@@ -136,10 +140,11 @@ for x in shift:
     new=[]
     key=gen(x)
     print("Round Key ",format(key))
-    
+    print("Round Key in hexa", format(list_binary_to_hex(key)))
+
     for i in range(48):
-            new.append(EX_R[i] ^ key[i])     
-       
+            new.append(EX_R[i] ^ key[i])
+
     print("XOR result",format(new))
 
     new= list(map(str, new))
@@ -147,43 +152,45 @@ for x in shift:
     temp1=[]
     s_box = S_Boxes()
     y=0
-    
+
     for x in range (0,48,6):
         temp = s_box[y][int(''.join(new[x]+new[x+5]),2)][int(''.join(new[x+1:x+5]),2)]
-        if y < 8: 
+        if y < 8:
             y+=1
         temp=(bin(int(temp))[2:].zfill(4))
         temp1.append([int(i) for i in str(temp)])
-      
+
     temp1 = list(itertools.chain(*temp1))
     print("F Function output ",format(temp1))
     temp1=permu(temp1)
     print("Output of permutation function ",format(temp1))
     temp2=[]
     for i in range(32):
-                 
+
             temp2.append(temp1[i] ^ L_IP[i])
     L_IP=R_IP
     R_IP=temp2
-    if r==17:
-        break
     print("New Right ",format(R_IP))
     print("New Left ",format(L_IP))
+    print("New Right in hexa", format(list_binary_to_hex(R_IP)))
+    print("New Left in hexa", format(list_binary_to_hex(L_IP)))
+    if r==17:
+        break
     EX_R=extend(R_IP)
 
 R_IP, L_IP = L_IP, R_IP
 res=L_IP+R_IP
-invIP =    [res[39], res[7], res[47], res[15], res[55], res[23], res[63], res[31], 
-            res[38], res[6], res[46], res[14], res[54], res[22], res[62], res[30], 
-            res[37], res[5], res[45], res[13], res[53], res[21], res[61], res[29], 
-            res[36], res[4], res[44], res[12], res[52], res[20], res[60], res[28], 
-            res[35], res[3], res[43], res[11], res[51], res[19], res[59], res[27], 
-            res[34], res[2], res[42], res[10], res[50], res[18], res[58], res[26], 
-            res[33], res[1], res[41], res[9],  res[49], res[17], res[57], res[25], 
+invIP =    [res[39], res[7], res[47], res[15], res[55], res[23], res[63], res[31],
+            res[38], res[6], res[46], res[14], res[54], res[22], res[62], res[30],
+            res[37], res[5], res[45], res[13], res[53], res[21], res[61], res[29],
+            res[36], res[4], res[44], res[12], res[52], res[20], res[60], res[28],
+            res[35], res[3], res[43], res[11], res[51], res[19], res[59], res[27],
+            res[34], res[2], res[42], res[10], res[50], res[18], res[58], res[26],
+            res[33], res[1], res[41], res[9],  res[49], res[17], res[57], res[25],
             res[32], res[0], res[40], res[8],  res[48], res[16], res[56], res[24]]
 
 
-print("================================================================================\n")            
+print("================================================================================\n")
 print("CipherText in Binary = ",format(invIP))
 invIP= list(map(str, invIP))
 invIP=''.join(invIP)

@@ -6,24 +6,26 @@
 #  Copyright   : Copyright 2014 Hamza Megahed
 #  Description : DES Key-Generator Algorithm
 #  ============================================================================
-#  
-# 
+#
+#
 #  ============================================================================
 #    This file is part of DES Calculator.
-# 
+#
 #     DES Calculator is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
 #     the Free Software Foundation, either version 3 of the License, or
 #     (at your option) any later version.
-# 
+#
 #     DES Calculator is distributed in the hope that it will be useful,
 #     but WITHOUT ANY WARRANTY; without even the implied warranty of
 #     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #     GNU General Public License for more details.
-# 
+#
 #     You should have received a copy of the GNU General Public License
 #     along with DES Calculator.  If not, see <http://www.gnu.org/licenses/>.
 #  ===========================================================================
+
+from utils import list_binary_to_hex
 print("\n\n");
 print("\t***********************************");
 print("\t**** Welcome to DES Calculator ****");
@@ -32,10 +34,10 @@ print("\t***********************************");
 # Convert key input from a Hex to binary
 key_hexinput = input("Enter The Key in Hex(16 digits):\n")
 try:
-    (int(key_hexinput, 16)) 
+    (int(key_hexinput, 16))
 except:
     print ("That is an invalid hex value")
-if len(key_hexinput) == 16:    
+if len(key_hexinput) == 16:
         pass
 else: raise ValueError('error')
 key_bininput=bin(int(key_hexinput, 16))[2:].zfill(64)
@@ -63,6 +65,13 @@ d=      [k[63],k[55],k[47],k[39],
 
 cd=c+d
 
+print("After dropping parity bits: ")
+print("- 28 left bits: ", c)
+print("- 28 right bits: ", d)
+print("- Left bank in hexa: ", list_binary_to_hex(c))
+print("- Right bank in hexa: ", list_binary_to_hex(d))
+print("-----------------------------------------------------")
+
 shift = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
 #------------------Key Generator For Encryption Algorithm-----------------
 # Rotation Function
@@ -71,8 +80,8 @@ def rot(rot_num):
     global c, d
     c=c[shift[rot_num]:]+c[:shift[rot_num]]
     d=d[shift[rot_num]:]+d[:shift[rot_num]]
-    cd=c+d 
-    return (cd) 
+    cd=c+d
+    return (cd)
 key={}
 pc2=[]
 
@@ -94,13 +103,13 @@ def gen(x):
 # Rotation Array in Reverse
 shiftd = [28, 27, 25, 23, 21, 19, 17, 15, 14, 12, 10, 8, 6, 4, 2, 1]
 
-# Rotation Function 
+# Rotation Function
 def rot2(rot_num,c,d):
-   
+
     c=c[shiftd[rot_num]:]+c[:shiftd[rot_num]]
     d=d[shiftd[rot_num]:]+d[:shiftd[rot_num]]
-    cd=c+d 
-    return (cd) 
+    cd=c+d
+    return (cd)
 key={}
 pc2=[]
 # Generator Function in Reverse
